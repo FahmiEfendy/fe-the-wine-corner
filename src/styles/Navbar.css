@@ -1,0 +1,50 @@
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar {
+  background: var(--white);
+  padding: 20px 0;
+  box-shadow: var(--card-shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--primary);
+  letter-spacing: 1px;
+}
+
+.navbar-logo span {
+  color: var(--accent);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.navbar-link {
+  font-weight: 500;
+}
+
+.navbar-link.explore {
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .navbar-logo {
+    font-size: 20px;
+  }
+  
+  .navbar-links {
+    gap: 15px;
+    font-size: 14px;
+  }
+}

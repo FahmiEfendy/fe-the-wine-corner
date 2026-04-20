@@ -1,0 +1,148 @@
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.detail-image-box {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #eee;
+  aspect-ratio: 1 / 1;
+}
+
+.detail-image {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.detail-title {
+  font-size: 48px;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.detail-price {
+  font-size: 32px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.detail-desc {
+  color: var(--text-light);
+  font-size: 18px;
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+.detail-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-light);
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  margin-bottom: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  padding: 0;
+}
+
+.btn-back:hover {
+  color: var(--primary);
+}
+
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.btn-whatsapp {
+  width: 100%;
+  padding: 18px;
+  background: #25D366;
+  color: var(--white);
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-whatsapp:hover {
+  background: #128C7E;
+  transform: translateY(-2px);
+}
+
+.marketplace-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.btn-official-store {
+  padding: 15px;
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-official-store:hover {
+  border-color: var(--accent);
+  background: #fafafa;
+  transform: translateY(-2px);
+}
+
+.tasting-notes {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .detail-title {
+    font-size: 32px;
+  }
+}

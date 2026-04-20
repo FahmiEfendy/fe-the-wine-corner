@@ -119,3 +119,15 @@
     gap: 20px;
   }
 }
+
+.no-products {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 40px;
+  background: white;
+  border-radius: 12px;
+  border: 1px dashed #e0e0e0;
+  color: var(--text-light);
+  font-size: 18px;
+  box-shadow: var(--card-shadow);
+}

@@ -48,29 +48,36 @@ const Home = () => {
                 </div>
 
                 <div className="product-grid">
-                    {products.map(product => (
-                        <Link key={product.productId} to={`/product/${product.productId}`}>
-                            <div className="product-card">
-                                <div className="product-image-container">
-                                    <img
-                                        src={product.productImage
-                                            ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
-                                            : 'https://static.thenounproject.com/png/26593-200.png'}
-                                        alt={product.productName}
-                                        className="product-image"
-                                        onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
-                                    />
+                    {products.length > 0 ? (
+                        products.map(product => (
+                            <Link key={product.productId} to={`/product/${product.productId}`}>
+                                <div className="product-card">
+                                    <div className="product-image-container">
+                                        <img
+                                            src={product.productImage
+                                                ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
+                                                : 'https://static.thenounproject.com/png/26593-200.png'}
+                                            alt={product.productName}
+                                            className="product-image"
+                                            onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
+                                        />
+                                    </div>
+                                    <div className="product-info">
+                                        <h3 className="product-name">{product.productName}</h3>
+                                        <p className="product-price">
+                                            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.productPrice)}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="product-info">
-                                    <h3 className="product-name">{product.productName}</h3>
-                                    <p className="product-price">
-                                        {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.productPrice)}
-                                    </p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
+                            </Link>
+                        ))
+                    ) : (
+                        <div className="no-products">
+                            <p>We're currently updating our selection. Please check back later for our latest curated bottles.</p>
+                        </div>
+                    )}
                 </div>
+
             </div>
         </div>
     );

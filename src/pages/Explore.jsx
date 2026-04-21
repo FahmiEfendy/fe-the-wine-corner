@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import LoadingSpinner from '../components/LoadingSpinner';
+import SkeletonList from '../components/SkeletonLoader';
 
 import '../styles/Explore.css';
 
@@ -17,7 +17,18 @@ const Explore = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) {
+        return (
+            <div className="container section">
+                <div className="category-header">
+                    <h1 className="category-title">Explore Our Collections</h1>
+                    <p className="footer-text">Select a category to view our curated selection</p>
+                    <div className="category-divider"></div>
+                </div>
+                <SkeletonList type="category" count={3} />
+            </div>
+        );
+    }
 
     return (
         <div className="container section">

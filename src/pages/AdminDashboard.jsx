@@ -65,6 +65,9 @@ const AdminDashboard = () => {
             } else if (sortOption === 'price-desc') {
                 sortBy = 'productPrice';
                 order = 'DESC';
+            } else if (sortOption === 'most-viewed') {
+                sortBy = 'view_count';
+                order = 'DESC';
             }
 
             const prodUrl = `/api/products?limit=10&page=${page}&sortBy=${sortBy}&order=${order}&search=${debouncedSearchTerm}${selectedCategoryId ? `&categoryId=${selectedCategoryId}` : ''}`;
@@ -191,6 +194,7 @@ const AdminDashboard = () => {
                         >
                             <option value="name-asc">Name (A-Z)</option>
                             <option value="last-added">Last Added</option>
+                            <option value="most-viewed">Most Viewed</option>
                             <option value="price-asc">Price (Low to High)</option>
                             <option value="price-desc">Price (High to Low)</option>
                         </select>
@@ -220,10 +224,11 @@ const AdminDashboard = () => {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th style={{ width: '45%' }}>Product</th>
-                            <th style={{ width: '20%' }}>Category</th>
-                            <th style={{ width: '20%' }}>Price</th>
-                            <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
+                            <th style={{ width: '40%' }}>Product</th>
+                            <th style={{ width: '15%' }}>Category</th>
+                            <th style={{ width: '15%' }}>Price</th>
+                            <th style={{ width: '10%' }}>Views</th>
+                            <th style={{ width: '20%', textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,6 +252,11 @@ const AdminDashboard = () => {
                                     </td>
                                     <td>{categories.find(c => c.productCategoryId === product.productCategoryId)?.productType || 'N/A'}</td>
                                     <td>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.productPrice)}</td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--text-light)', fontSize: '13px' }}>
+                                            <span>{product.view_count || 0}</span>
+                                        </div>
+                                    </td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                                             <button onClick={() => handleOpenModal(product)} className="btn-icon btn-edit"><Edit2 size={18} /></button>

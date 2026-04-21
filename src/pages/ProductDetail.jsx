@@ -1,17 +1,18 @@
-import axios from 'axios';
-import { Check, Info } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Check, Info, Wine } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import api from '../utils/api';
 import { WhatsAppIcon } from '../components/Icons';
-import LoadingSpinner from '../components/LoadingSpinner';
 import { CONTENT_MAP } from '../components/ProductContent';
+import { SkeletonCard } from '../components/SkeletonLoader';
 
 import '../styles/ProductDetail.css';
 
 const ProductDetail = () => {
-    const { productId } = useParams();
     const navigate = useNavigate();
+    const { productId } = useParams();
+    const hasTrackedView = useRef(false);
     const [product, setProduct] = useState(null);
     const [category, setCategory] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,13 +21,19 @@ const ProductDetail = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const productRes = await axios.get(`/api/products/${productId}`);
+                const productRes = await api.get(`/api/products/${productId}`);
                 setProduct(productRes.data);
 
                 // Fetch categories to get the type name
-                const categoryRes = await axios.get('/api/categories');
+                const categoryRes = await api.get('/api/categories');
                 const matchedCat = categoryRes.data.find(c => c.productCategoryId === productRes.data.productCategoryId);
                 setCategory(matchedCat);
+
+                // Increment view count (once per mount)
+                if (!hasTrackedView.current) {
+                    api.patch(`/api/products/${productId}/view`).catch(err => console.error('View tracking failed', err));
+                    hasTrackedView.current = true;
+                }
             } catch (err) {
                 console.error(err);
             } finally {
@@ -37,7 +44,15 @@ const ProductDetail = () => {
         fetchData();
     }, [productId]);
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) {
+        return (
+            <div className="container section">
+                <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+                    <SkeletonCard />
+                </div>
+            </div>
+        );
+    }
     if (!product) return <div className="container" style={{ padding: '100px', textAlign: 'center' }}>Product not found.</div>;
 
     const content = CONTENT_MAP[category?.productType] || CONTENT_MAP['Default'];

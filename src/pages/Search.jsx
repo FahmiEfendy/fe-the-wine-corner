@@ -3,15 +3,19 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search as SearchIcon } from 'lucide-react';
 
-import LoadingSpinner from '../components/LoadingSpinner';
+import SkeletonList from '../components/SkeletonLoader';
 
 import '../styles/Category.css'; // Reuse category styles for consistency
 
 const Search = () => {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q') || '';
+
+    const [error, setError] = useState('');
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
     const [pagination, setPagination] = useState({ page: 1, lastPage: 1 });
 
     useEffect(() => {
@@ -20,10 +24,51 @@ const Search = () => {
         }
     }, [query]);
 
-    const fetchSearchResults = async (page) => {
+    const formatNumber = (value) => {
+        if (!value) return '';
+        const number = value.replace(/\D/g, '');
+        return new Intl.NumberFormat('id-ID').format(number);
+    };
+
+    const validatePrices = (min, max, activeField) => {
+        const rawMin = parseInt(min.replace(/\D/g, '')) || 0;
+        const rawMax = parseInt(max.replace(/\D/g, '')) || Infinity;
+
+        if (max !== '' && rawMin > rawMax) {
+            if (activeField === 'min') {
+                setError('Min price cannot be greater than max price');
+            } else {
+                setError('Max price cannot be less than min price');
+            }
+        } else {
+            setError('');
+        }
+    };
+
+    const handlePriceChange = (e, setter) => {
+        const rawValue = e.target.value.replace(/\D/g, '');
+        const formatted = formatNumber(rawValue);
+        setter(formatted);
+
+        const field = setter === setMinPrice ? 'min' : 'max';
+        if (field === 'min') {
+            validatePrices(formatted, maxPrice, 'min');
+        } else {
+            validatePrices(minPrice, formatted, 'max');
+        }
+    };
+
+    const fetchSearchResults = async (page, min = '', max = '') => {
         setLoading(true);
         try {
-            const prodRes = await axios.get(`/api/products?search=${encodeURIComponent(query)}&page=${page}&limit=12`);
+            const rawMin = min.replace(/\D/g, '');
+            const rawMax = max.replace(/\D/g, '');
+
+            let url = `/api/products?search=${encodeURIComponent(query)}&page=${page}&limit=12`;
+            if (rawMin) url += `&minPrice=${rawMin}`;
+            if (rawMax) url += `&maxPrice=${rawMax}`;
+
+            const prodRes = await axios.get(url);
             setProducts(prodRes.data.data);
             setPagination(prodRes.data.pagination);
         } catch (err) {
@@ -35,12 +80,22 @@ const Search = () => {
 
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= pagination.lastPage) {
-            fetchSearchResults(newPage);
+            fetchSearchResults(newPage, minPrice, maxPrice);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    if (loading) return <LoadingSpinner />;
+    const applyPriceFilter = () => {
+        if (error) return;
+        fetchSearchResults(1, minPrice, maxPrice);
+    };
+
+    const clearFilters = () => {
+        setMinPrice('');
+        setMaxPrice('');
+        setError('');
+        fetchSearchResults(1, '', '');
+    };
 
     return (
         <div className="container section">
@@ -50,9 +105,55 @@ const Search = () => {
                     Search Results: "{query}"
                 </h1>
                 <div className="category-divider"></div>
+
+                {/* Price Filter UI */}
+                <div className="filter-controls">
+                    <div className="price-inputs-container">
+                        <div className="price-inputs">
+                            <span className="filter-label">Filter Price:</span>
+                            <div className="input-with-prefix">
+                                <span className="prefix">Rp</span>
+                                <input
+                                    type="text"
+                                    placeholder="Min Price"
+                                    className={`filter-input ${error ? 'input-error' : ''}`}
+                                    value={minPrice}
+                                    onChange={(e) => handlePriceChange(e, setMinPrice)}
+                                />
+                            </div>
+                            <div className="input-with-prefix">
+                                <span className="prefix">Rp</span>
+                                <input
+                                    type="text"
+                                    placeholder="Max Price"
+                                    className={`filter-input ${error ? 'input-error' : ''}`}
+                                    value={maxPrice}
+                                    onChange={(e) => handlePriceChange(e, setMaxPrice)}
+                                />
+                            </div>
+                            <div className="filter-actions">
+                                {(minPrice || maxPrice) && (
+                                    <button className="btn-clear" onClick={clearFilters}>
+                                        Clear
+                                    </button>
+                                )}
+                                <button
+                                    className="btn-filter"
+                                    onClick={applyPriceFilter}
+                                    disabled={!!error}
+                                >
+                                    Apply Filter
+                                </button>
+                            </div>
+                        </div>
+                        {error && <div className="filter-error-msg">{error}</div>}
+                    </div>
+                </div>
             </div>
 
-            {products.length === 0 ? (
+            {loading ? (
+                <SkeletonList count={8} />
+            ) : products.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '80px 40px', color: 'var(--text-light)' }}>
                     <div style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.3 }}>🍷</div>
                     <h3>No wines matched your search.</h3>

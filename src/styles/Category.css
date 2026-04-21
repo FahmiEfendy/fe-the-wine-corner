@@ -155,6 +155,139 @@
   }
 }
 
+/* Filter UI */
+.filter-controls {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.price-inputs-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 10px 25px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.filter-error-msg {
+  color: #ff4d4f;
+  font-size: 13px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+.input-error {
+  border-color: #ff4d4f !important;
+}
+
+.btn-filter:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.prefix {
+  position: absolute;
+  left: 15px;
+  color: var(--text-light);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.filter-input {
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 8px 15px 8px 38px;
+  width: 140px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.filter-input:focus {
+  border-color: var(--primary);
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-clear {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
+}
+
+.btn-clear:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.btn-filter {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-filter:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .price-inputs {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    border-radius: 15px;
+    padding: 20px;
+  }
+  .filter-label {
+    text-align: center;
+    margin-bottom: 5px;
+  }
+  .filter-input {
+    width: 100%;
+  }
+}
+
 @media (max-width: 480px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr); /* Force 2 columns for better density on mobile */

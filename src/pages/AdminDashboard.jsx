@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X, Search, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 
+import api from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 import '../styles/AdminDashboard.css';
@@ -69,8 +69,8 @@ const AdminDashboard = () => {
 
             const prodUrl = `/api/products?limit=10&page=${page}&sortBy=${sortBy}&order=${order}&search=${debouncedSearchTerm}${selectedCategoryId ? `&categoryId=${selectedCategoryId}` : ''}`;
             const [prodRes, catRes] = await Promise.all([
-                axios.get(prodUrl),
-                axios.get('/api/categories')
+                api.get(prodUrl),
+                api.get('/api/categories')
             ]);
             setProducts(prodRes.data.data);
             setPagination(prodRes.data.pagination);
@@ -107,12 +107,9 @@ const AdminDashboard = () => {
 
     const confirmDelete = async () => {
         if (!productToDelete) return;
-        
+
         try {
-            const token = localStorage.getItem('adminToken');
-            await axios.delete(`/api/products/${productToDelete.productId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            await api.delete(`/api/products/${productToDelete.productId}`);
             setIsDeleteModalOpen(false);
             setProductToDelete(null);
             fetchData();
@@ -124,8 +121,6 @@ const AdminDashboard = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('adminToken');
-
             const data = new FormData();
             data.append('productName', formData.productName);
             data.append('productPrice', formData.productPrice);
@@ -137,17 +132,10 @@ const AdminDashboard = () => {
                 data.append('productImage', formData.productImage);
             }
 
-            const config = {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                }
-            };
-
             if (editingProduct) {
-                await axios.put(`/api/products/${editingProduct.productId}`, data, config);
+                await api.put(`/api/products/${editingProduct.productId}`, data);
             } else {
-                await axios.post('/api/products', data, config);
+                await api.post('/api/products', data);
             }
             setIsModalOpen(false);
             fetchData();
@@ -163,8 +151,8 @@ const AdminDashboard = () => {
             <div className="admin-header">
                 <h1 className="admin-title">Product Management</h1>
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <button 
-                        onClick={() => fetchData()} 
+                    <button
+                        onClick={() => fetchData()}
                         className={`btn-admin btn-refresh-full ${isRefreshing ? 'fetching-pulse' : ''}`}
                         disabled={isRefreshing}
                     >
@@ -372,8 +360,8 @@ const AdminDashboard = () => {
             {isDeleteModalOpen && productToDelete && (
                 <div className="modal-overlay" onClick={() => { setIsDeleteModalOpen(false); setProductToDelete(null); }}>
                     <div className="modal-content delete-modal" onClick={e => e.stopPropagation()}>
-                        <button 
-                            className="btn-close-modal" 
+                        <button
+                            className="btn-close-modal"
                             onClick={() => {
                                 setIsDeleteModalOpen(false);
                                 setProductToDelete(null);
@@ -381,25 +369,25 @@ const AdminDashboard = () => {
                         >
                             <X size={24} />
                         </button>
-                        
+
                         <h2>Delete Product?</h2>
                         <p className="delete-warning">
                             Are you sure you want to delete <strong>{productToDelete.productName}</strong>? This action cannot be undone.
                         </p>
-                        
+
                         <div className="delete-preview">
-                            <img 
+                            <img
                                 src={productToDelete.productImage
                                     ? (productToDelete.productImage.startsWith('http') ? productToDelete.productImage : `${import.meta.env.VITE_API_BASE_URL}/${productToDelete.productImage}`)
-                                    : 'https://static.thenounproject.com/png/26593-200.png'} 
+                                    : 'https://static.thenounproject.com/png/26593-200.png'}
                                 alt={productToDelete.productName}
                                 onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                             />
                         </div>
 
                         <div className="delete-actions">
-                            <button 
-                                className="btn-cancel" 
+                            <button
+                                className="btn-cancel"
                                 onClick={() => {
                                     setIsDeleteModalOpen(false);
                                     setProductToDelete(null);
@@ -407,8 +395,8 @@ const AdminDashboard = () => {
                             >
                                 Cancel
                             </button>
-                            <button 
-                                className="btn-delete-confirm" 
+                            <button
+                                className="btn-delete-confirm"
                                 onClick={confirmDelete}
                             >
                                 Delete Product

@@ -17,28 +17,104 @@
 
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
 }
 
 .category-card {
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white);
-  border-radius: 16px;
+  position: relative;
+  height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
   box-shadow: var(--card-shadow);
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: capitalize;
-  border: 1px solid #eee;
-  text-align: center;
-  padding: 20px;
+  text-decoration: none;
 }
 
-.category-card:hover {
-  transform: scale(1.02);
-  border-color: var(--accent);
+.category-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85));
+  transition: background 0.4s ease;
+}
+
+.category-content {
+  position: relative;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  color: var(--white);
+  text-align: left;
+}
+
+.category-name-text {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.category-cta {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.1);
+}
+
+.category-card:hover .category-overlay {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(92, 10, 26, 0.8));
+}
+
+.category-card:hover .category-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .explore-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .category-card {
+    height: 250px;
+  }
+
+  .category-name-text {
+    font-size: 24px;
+  }
+
+  .category-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

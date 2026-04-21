@@ -34,7 +34,21 @@ const Explore = () => {
                         to={cat.productPath}
                         className="category-card"
                     >
-                        {cat.productType}
+                        <div className="category-image-container">
+                            <img
+                                src={cat.image_path
+                                    ? (cat.image_path.startsWith('http') ? cat.image_path : `${import.meta.env.VITE_API_BASE_URL}/${cat.image_path}`)
+                                    : "https://upload.wikimedia.org/wikipedia/commons/a/a8/Common_alcoholic_beverages.jpg"
+                                }
+                                alt={cat.productType}
+                                className="category-image"
+                            />
+                            <div className="category-overlay"></div>
+                        </div>
+                        <div className="category-content">
+                            <h3 className="category-name-text">{cat.productType}</h3>
+                            <div className="category-cta">View Collection</div>
+                        </div>
                     </Link>
                 ))}
             </div>

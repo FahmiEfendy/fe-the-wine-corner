@@ -145,4 +145,8 @@
   .detail-title {
     font-size: 32px;
   }
+
+  .hide-on-mobile {
+    display: none;
+  }
 }

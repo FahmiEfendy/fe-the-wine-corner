@@ -195,6 +195,9 @@ const AdminDashboard = () => {
                             <option value="name-asc">Name (A-Z)</option>
                             <option value="last-added">Last Added</option>
                             <option value="most-viewed">Most Viewed</option>
+                            <option value="whatsapp-clicks">WhatsApp Clicks</option>
+                            <option value="blibli-clicks">Blibli Clicks</option>
+                            <option value="tokopedia-clicks">Tokopedia Clicks</option>
                             <option value="price-asc">Price (Low to High)</option>
                             <option value="price-desc">Price (High to Low)</option>
                         </select>
@@ -226,9 +229,10 @@ const AdminDashboard = () => {
                         <tr>
                             <th style={{ width: '40%' }}>Product</th>
                             <th style={{ width: '15%' }}>Category</th>
-                            <th style={{ width: '15%' }}>Price</th>
-                            <th style={{ width: '10%' }}>Views</th>
-                            <th style={{ width: '20%', textAlign: 'right' }}>Actions</th>
+                            <th style={{ width: '10%' }}>Price</th>
+                            <th style={{ width: '5%' }}>Views</th>
+                            <th style={{ width: '15%' }}>Clicks</th>
+                            <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -255,6 +259,13 @@ const AdminDashboard = () => {
                                     <td>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--text-light)', fontSize: '13px' }}>
                                             <span>{product.view_count || 0}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '11px', color: 'var(--text-light)' }}>
+                                            <span>WA: {product.whatsapp_clicks || 0}</span>
+                                            <span>BB: {product.blibli_clicks || 0}</span>
+                                            <span>TP: {product.tokopedia_clicks || 0}</span>
                                         </div>
                                     </td>
                                     <td>

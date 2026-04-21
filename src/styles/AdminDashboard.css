@@ -73,8 +73,13 @@
   border-radius: 4px;
 }
 
-.btn-edit { color: #2196F3; }
-.btn-delete { color: #f44336; }
+.btn-edit {
+  color: #2196F3;
+}
+
+.btn-delete {
+  color: #f44336;
+}
 
 .btn-refresh-full {
   background: #f0f2f5 !important;
@@ -104,14 +109,30 @@
 }
 
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.02); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Delete Modal Specifics */
@@ -137,7 +158,7 @@
   border: 1px solid #eee;
   padding: 10px;
   background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .delete-preview img {
@@ -181,10 +202,14 @@
   background: #d32f2f;
   box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
+
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,15 +255,15 @@
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .table-container {
     overflow-x: auto;
   }
-  
+
   .admin-table {
     min-width: 600px;
   }
-  
+
   .modal-content {
     width: 95%;
     padding: 20px;
@@ -249,13 +274,22 @@
   margin-bottom: 25px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .admin-filters {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
 }
 
 .search-sort-row {
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .search-wrapper {
@@ -274,7 +308,7 @@
   border: 1px solid #eee;
   border-radius: 10px;
   background: var(--white);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
   font-size: 15px;
   cursor: pointer;
   outline: none;
@@ -297,7 +331,7 @@
   border: 1px solid #eee;
   border-radius: 10px;
   background: var(--white);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
   font-size: 15px;
 }
 

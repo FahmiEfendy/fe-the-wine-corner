@@ -2,6 +2,7 @@ import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import Home from './pages/Home';
+import Search from './pages/Search';
 import Explore from './pages/Explore';
 import Category from './pages/Category';
 import Footer from './components/Footer';
@@ -20,6 +21,7 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageLayout><Home /></PageLayout>} />
         <Route path="/category" element={<PageLayout><Explore /></PageLayout>} />
+        <Route path="/search" element={<PageLayout><Search /></PageLayout>} />
         <Route path="/admin/login" element={<PageLayout><AdminLogin /></PageLayout>} />
         <Route path="/admin" element={
           <ProtectedRoute>

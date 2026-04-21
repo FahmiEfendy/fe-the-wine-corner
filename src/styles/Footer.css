@@ -36,12 +36,24 @@
 .footer-links li {
   margin-bottom: 10px;
   opacity: 0.7;
-  transition: var(--transition);
 }
 
 .footer-links li:hover {
   opacity: 1;
   color: var(--accent);
+}
+
+.footer-links a:hover .footer-icon {
+  filter: invert(72%) sepia(35%) saturate(738%) hue-rotate(5deg) brightness(98%) contrast(89%);
+  opacity: 1;
+  transition-delay: 3s;
+}
+
+.footer-icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: all 0.5s ease-in-out;
+  object-fit: contain;
 }
 
 .footer-links a {
@@ -56,7 +68,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 30px;
   text-align: center;
   font-size: 12px;

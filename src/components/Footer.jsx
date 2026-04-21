@@ -44,7 +44,7 @@ const Footer = () => {
                         <ul className="footer-links">
                             <li>
                                 <a href="https://www.google.com/maps/place/The+Wine+Corner/@-6.2643896,106.783088,15z/data=!4m5!3m4!1s0x0:0x5cde2091b0d7ada3!8m2!3d-6.2643735!4d106.7830896" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', gap: '10px' }}>
-                                    <img src={storeIcon} alt="Store" width="20" height="20" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7, objectFit: 'contain' }} />
+                                    <img src={storeIcon} alt="Store" width="20" height="20" className="footer-icon" />
                                     <span>
                                         PIM 2 Lt. LG North Atrium No. 3<br />
                                         Jakarta Selatan - 12310 <br />
@@ -59,7 +59,7 @@ const Footer = () => {
                         <ul className="footer-links" style={{ marginBottom: '20px' }}>
                             <li>
                                 <a href="tel:08991890269" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <img src={phoneIcon} alt="Phone" width="20" height="20" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
+                                    <img src={phoneIcon} alt="Phone" width="20" height="20" className="footer-icon" />
                                     <span>628991890269</span>
                                 </a>
                             </li>
@@ -69,7 +69,7 @@ const Footer = () => {
                         <ul className="footer-links">
                             <li>
                                 <a href="http://wa.me/6288991890269" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <img src={waIcon} alt="Whatsapp" width="20" height="20" style={{ filter: 'brightness(0) invert(1)', opacity: 0.7 }} />
+                                    <img src={waIcon} alt="Whatsapp" width="20" height="20" className="footer-icon" />
                                     <span>6288991890269</span>
                                 </a>
                             </li>

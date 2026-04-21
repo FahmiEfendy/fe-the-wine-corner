@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -15,7 +15,7 @@ const Home = () => {
         const date = new Date();
         const hourSeed = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
 
-        axios.get(`/api/products?limit=6&sortBy=random&seed=${hourSeed}`)
+        api.get(`/api/products?limit=6&sortBy=random&seed=${hourSeed}`)
             .then(res => setProducts(res.data.data))
             .catch(err => console.error(err))
             .finally(() => setLoading(false));

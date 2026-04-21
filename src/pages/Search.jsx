@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api';
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search as SearchIcon } from 'lucide-react';
@@ -68,7 +68,7 @@ const Search = () => {
             if (rawMin) url += `&minPrice=${rawMin}`;
             if (rawMax) url += `&maxPrice=${rawMax}`;
 
-            const prodRes = await axios.get(url);
+            const prodRes = await api.get(url);
             setProducts(prodRes.data.data);
             setPagination(prodRes.data.pagination);
         } catch (err) {

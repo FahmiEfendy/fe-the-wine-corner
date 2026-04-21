@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ const Explore = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('/api/categories')
+        api.get('/api/categories')
             .then(res => setCategories(res.data))
             .catch(err => console.error(err))
             .finally(() => setLoading(false));

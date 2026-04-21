@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -58,7 +58,7 @@ const Category = () => {
     const fetchCategoryData = async (page, min = '', max = '') => {
         setLoading(true);
         try {
-            const catRes = await axios.get('/api/categories');
+            const catRes = await api.get('/api/categories');
             const currentCat = catRes.data.find(c => c.productPath === `/${categoryPath}`);
 
             if (currentCat) {
@@ -70,7 +70,7 @@ const Category = () => {
                 if (rawMin) url += `&minPrice=${rawMin}`;
                 if (rawMax) url += `&maxPrice=${rawMax}`;
 
-                const prodRes = await axios.get(url);
+                const prodRes = await api.get(url);
                 setProducts(prodRes.data.data);
                 setPagination(prodRes.data.pagination);
             } else {

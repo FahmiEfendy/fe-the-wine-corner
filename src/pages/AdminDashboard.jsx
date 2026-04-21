@@ -278,8 +278,10 @@ const AdminDashboard = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-light)' }}>
-                                    No products found.
+                                <td colSpan="6" style={{ textAlign: 'center', padding: '60px', color: 'var(--text-light)' }}>
+                                    <div style={{ fontSize: '40px', marginBottom: '15px' }}>📦</div>
+                                    <p>Your store is currently empty.</p>
+                                    <p style={{ fontSize: '14px', marginTop: '5px' }}>Click "Add Product" to start building your collection.</p>
                                 </td>
                             </tr>
                         )}

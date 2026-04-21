@@ -65,8 +65,18 @@ const Explore = () => {
             </div>
 
             {categories.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-light)' }}>
-                    No categories found.
+                <div style={{ 
+                    textAlign: 'center', 
+                    padding: '80px 40px', 
+                    background: '#fff', 
+                    borderRadius: '20px', 
+                    boxShadow: 'var(--card-shadow)' 
+                }}>
+                    <div style={{ fontSize: '50px', marginBottom: '20px', opacity: 0.2 }}>🔍</div>
+                    <h2 style={{ color: 'var(--primary)', marginBottom: '10px' }}>No Collections Found</h2>
+                    <p style={{ color: 'var(--text-light)', maxWidth: '400px', margin: '0 auto' }}>
+                        We are currently updating our cellar. Please check back soon or contact us via WhatsApp for inquiries.
+                    </p>
                 </div>
             )}
         </div>

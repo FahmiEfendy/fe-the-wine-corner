@@ -126,8 +126,11 @@
   }
   
   .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    padding: 0 10px;
+    width: 100%;
+    margin: 0;
   }
 
   .product-image-container {
@@ -140,8 +143,23 @@
   
   .pagination-container {
     gap: 8px;
-    flex-wrap: wrap;
+    flex-direction: column; /* Stack prev/next and numbers on mobile */
     margin-top: 30px;
+  }
+
+  .page-numbers {
+    flex-wrap: wrap; /* Prevent overflow if many pages */
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .page-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    color: var(--text-light);
+    font-weight: 600;
   }
 
   .btn-pagination {
@@ -278,17 +296,31 @@
   .price-inputs {
     flex-direction: column;
     height: auto;
-    align-items: stretch;
+    align-items: center; /* Center children horizontally */
     width: 100%;
     border-radius: 15px;
     padding: 20px;
+    gap: 15px;
   }
+  
+  .filter-actions {
+    width: 100%;
+    justify-content: center;
+    margin-top: 5px;
+  }
+
+  .sort-container {
+    width: 100%;
+    justify-content: center;
+  }
+
   .filter-label {
     text-align: center;
     margin-bottom: 5px;
   }
   .filter-input {
     width: 100%;
+    max-width: 250px; /* Prevent too wide on small tablet */
   }
 }
 
@@ -329,7 +361,20 @@
 
 @media (max-width: 480px) {
   .product-grid {
-    grid-template-columns: repeat(2, 1fr); /* Force 2 columns for better density on mobile */
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0;
+  }
+  
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow-x: hidden; /* Safety against overflow */
+  }
+
+  .page-button {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 }

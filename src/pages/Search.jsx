@@ -107,6 +107,39 @@ const Search = () => {
         setOrder(newOrder);
     };
 
+    const getPageNumbers = () => {
+        const { page, lastPage } = pagination;
+        const delta = 1; // Number of pages to show around current page
+        const range = [];
+        const rangeWithDots = [];
+        let l;
+
+        range.push(1);
+
+        if (lastPage <= 1) return range;
+
+        for (let i = page - delta; i <= page + delta; i++) {
+            if (i < lastPage && i > 1) {
+                range.push(i);
+            }
+        }
+        range.push(lastPage);
+
+        for (let i of range) {
+            if (l) {
+                if (i - l === 2) {
+                    rangeWithDots.push(l + 1);
+                } else if (i - l !== 1) {
+                    rangeWithDots.push('...');
+                }
+            }
+            rangeWithDots.push(i);
+            l = i;
+        }
+
+        return rangeWithDots;
+    };
+
     return (
         <div className="container section">
             {/* Search Header Group */}
@@ -232,16 +265,20 @@ const Search = () => {
                             </button>
 
                             <div className="page-numbers">
-                                {[...Array(pagination.lastPage)].map((_, i) => (
+                            {getPageNumbers().map((p, i) => (
+                                p === '...' ? (
+                                    <span key={`dots-${i}`} className="page-dots">...</span>
+                                ) : (
                                     <button
-                                        key={i + 1}
-                                        onClick={() => handlePageChange(i + 1)}
-                                        className={`page-button ${pagination.page === i + 1 ? 'active' : ''}`}
+                                        key={p}
+                                        onClick={() => handlePageChange(p)}
+                                        className={`page-button ${pagination.page === p ? 'active' : ''}`}
                                     >
-                                        {i + 1}
+                                        {p}
                                     </button>
-                                ))}
-                            </div>
+                                )
+                            ))}
+                        </div>
 
                             <button
                                 onClick={() => handlePageChange(pagination.page + 1)}

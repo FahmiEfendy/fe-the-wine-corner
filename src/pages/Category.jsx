@@ -112,6 +112,38 @@ const Category = () => {
         setOrder(newOrder);
     };
 
+    const getPageNumbers = () => {
+        const { page, lastPage } = pagination;
+        const delta = 1;
+        const range = [];
+        const rangeWithDots = [];
+        let l;
+
+        range.push(1);
+        if (lastPage <= 1) return range;
+
+        for (let i = page - delta; i <= page + delta; i++) {
+            if (i < lastPage && i > 1) {
+                range.push(i);
+            }
+        }
+        range.push(lastPage);
+
+        for (let i of range) {
+            if (l) {
+                if (i - l === 2) {
+                    rangeWithDots.push(l + 1);
+                } else if (i - l !== 1) {
+                    rangeWithDots.push('...');
+                }
+            }
+            rangeWithDots.push(i);
+            l = i;
+        }
+
+        return rangeWithDots;
+    };
+
     if (!loading && !category) return <div className="container" style={{ padding: '100px', textAlign: 'center' }}>Category not found.</div>;
 
     return (
@@ -225,14 +257,18 @@ const Category = () => {
                             </button>
 
                             <div className="page-numbers">
-                                {[...Array(pagination.lastPage)].map((_, i) => (
-                                    <button
-                                        key={i + 1}
-                                        onClick={() => handlePageChange(i + 1)}
-                                        className={`page-button ${pagination.page === i + 1 ? 'active' : ''}`}
-                                    >
-                                        {i + 1}
-                                    </button>
+                                {getPageNumbers().map((p, i) => (
+                                    p === '...' ? (
+                                        <span key={`dots-${i}`} className="page-dots">...</span>
+                                    ) : (
+                                        <button
+                                            key={p}
+                                            onClick={() => handlePageChange(p)}
+                                            className={`page-button ${pagination.page === p ? 'active' : ''}`}
+                                        >
+                                            {p}
+                                        </button>
+                                    )
                                 ))}
                             </div>
 

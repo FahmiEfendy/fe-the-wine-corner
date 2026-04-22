@@ -1,16 +1,31 @@
 import api from '../utils/api';
-import { Link } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import LoadingSpinner from '../components/LoadingSpinner';
 
 import '../styles/Home.css';
 
 const Home = () => {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [placeholder, setPlaceholder] = useState('What shall we pour for you today?');
 
     useEffect(() => {
+        const elegantPhrases = [
+            "Seek the extraordinary in every bottle...",
+            "Discover a vintage that speaks to you...",
+            "Find the perfect accompaniment for your evening...",
+            "Explore our curated cellar of fine spirits...",
+            "Unveil the essence of world-class vineyards...",
+            "What shall we pour for you today?"
+        ];
+        const randomPhrase = elegantPhrases[Math.floor(Math.random() * elegantPhrases.length)];
+        setPlaceholder(randomPhrase);
+
         // Generate a seed that changes every hour (YYYY-MM-DD-HH)
         const date = new Date();
         const hourSeed = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
@@ -20,6 +35,13 @@ const Home = () => {
             .catch(err => console.error(err))
             .finally(() => setLoading(false));
     }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+        }
+    };
 
     if (loading) return <LoadingSpinner />;
 
@@ -32,9 +54,24 @@ const Home = () => {
                     <p className="hero-subtitle">
                         Discover our curated collection of premium wines from the world's most renowned vineyards.
                     </p>
-                    <Link to="/category" className="btn-primary">
-                        Explore Collection
-                    </Link>
+
+                    <form className="hero-search-container" onSubmit={handleSearch}>
+                        <Search className="hero-search-icon" size={24} />
+                        <input 
+                            type="text" 
+                            className="hero-search-input"
+                            placeholder={placeholder}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button type="submit" className="hero-search-btn">Search</button>
+                    </form>
+
+                    <div className="hero-cta-group">
+                        <Link to="/category" className="btn-primary">
+                            Explore Collection
+                        </Link>
+                    </div>
                 </div>
             </div>
 
@@ -48,7 +85,7 @@ const Home = () => {
                 </div>
 
                 <div className="product-grid">
-                    {products.length > 0 ? (
+                    {products?.length > 0 ? (
                         products.map(product => (
                             <Link key={product.productId} to={`/product/${product.productId}`}>
                                 <div className="product-card">

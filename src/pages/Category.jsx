@@ -10,16 +10,18 @@ import '../styles/Category.css';
 const Category = () => {
     const { categoryPath } = useParams();
     const [error, setError] = useState('');
+    const [order, setOrder] = useState('DESC');
     const [products, setProducts] = useState([]);
-    const [category, setCategory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [category, setCategory] = useState(null);
+    const [sortBy, setSortBy] = useState('createdAt');
     const [pagination, setPagination] = useState({ page: 1, lastPage: 1 });
 
     useEffect(() => {
-        fetchCategoryData(1);
-    }, [categoryPath]);
+        fetchCategoryData(1, minPrice, maxPrice, sortBy, order);
+    }, [categoryPath, sortBy, order]);
 
     const formatNumber = (value) => {
         if (!value) return '';
@@ -55,7 +57,7 @@ const Category = () => {
         }
     };
 
-    const fetchCategoryData = async (page, min = '', max = '') => {
+    const fetchCategoryData = async (page, min = '', max = '', currentSort = sortBy, currentOrder = order) => {
         setLoading(true);
         try {
             const catRes = await api.get('/api/categories');
@@ -69,6 +71,8 @@ const Category = () => {
                 let url = `/api/products?categoryId=${currentCat.productCategoryId}&page=${page}&limit=9`;
                 if (rawMin) url += `&minPrice=${rawMin}`;
                 if (rawMax) url += `&maxPrice=${rawMax}`;
+                if (currentSort) url += `&sortBy=${currentSort}`;
+                if (currentOrder) url += `&order=${currentOrder}`;
 
                 const prodRes = await api.get(url);
                 setProducts(prodRes.data.data);
@@ -92,14 +96,20 @@ const Category = () => {
 
     const applyPriceFilter = () => {
         if (error) return;
-        fetchCategoryData(1, minPrice, maxPrice);
+        fetchCategoryData(1, minPrice, maxPrice, sortBy, order);
     };
 
-    const clearFilters = () => {
+    const clearPriceFilters = () => {
         setMinPrice('');
         setMaxPrice('');
         setError('');
-        fetchCategoryData(1, '', '');
+        fetchCategoryData(1, '', '', sortBy, order);
+    };
+
+    const handleSortChange = (e) => {
+        const [newSort, newOrder] = e.target.value.split(':');
+        setSortBy(newSort);
+        setOrder(newOrder);
     };
 
     if (!loading && !category) return <div className="container" style={{ padding: '100px', textAlign: 'center' }}>Category not found.</div>;
@@ -137,7 +147,7 @@ const Category = () => {
                             </div>
                             <div className="filter-actions">
                                 {(minPrice || maxPrice) && (
-                                    <button className="btn-clear" onClick={clearFilters}>
+                                    <button className="btn-clear" onClick={clearPriceFilters}>
                                         Clear
                                     </button>
                                 )}
@@ -151,6 +161,21 @@ const Category = () => {
                             </div>
                         </div>
                         {error && <div className="filter-error-msg">{error}</div>}
+                    </div>
+
+                    <div className="sort-container">
+                        <span className="filter-label">Sort By:</span>
+                        <select
+                            className="filter-input sort-select"
+                            value={`${sortBy}:${order}`}
+                            onChange={handleSortChange}
+                        >
+                            <option value="createdAt:DESC">Newest Arrivals</option>
+                            <option value="productPrice:ASC">Price: Lowest to Highest</option>
+                            <option value="productPrice:DESC">Price: Highest to Lowest</option>
+                            <option value="view_count:DESC">Most Popular</option>
+                            <option value="productName:ASC">Name: A-Z</option>
+                        </select>
                     </div>
                 </div>
             </div>

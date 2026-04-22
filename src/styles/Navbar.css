@@ -102,6 +102,27 @@
   color: var(--accent);
 }
 
+/* Quick Links for Homepage */
+.navbar-quick-links {
+  display: flex !important;
+  gap: 25px;
+  margin-left: 20px;
+}
+
+.quick-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.quick-link:hover {
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
 
 
 .navbar-links {

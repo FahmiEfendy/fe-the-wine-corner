@@ -12,17 +12,19 @@ const Search = () => {
     const query = searchParams.get('q') || '';
 
     const [error, setError] = useState('');
+    const [order, setOrder] = useState('DESC');
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [sortBy, setSortBy] = useState('createdAt');
     const [pagination, setPagination] = useState({ page: 1, lastPage: 1 });
 
     useEffect(() => {
         if (query) {
-            fetchSearchResults(1);
+            fetchSearchResults(1, minPrice, maxPrice, sortBy, order);
         }
-    }, [query]);
+    }, [query, sortBy, order]);
 
     const formatNumber = (value) => {
         if (!value) return '';
@@ -58,7 +60,7 @@ const Search = () => {
         }
     };
 
-    const fetchSearchResults = async (page, min = '', max = '') => {
+    const fetchSearchResults = async (page, min = '', max = '', currentSort = sortBy, currentOrder = order) => {
         setLoading(true);
         try {
             const rawMin = min.replace(/\D/g, '');
@@ -67,6 +69,8 @@ const Search = () => {
             let url = `/api/products?search=${encodeURIComponent(query)}&page=${page}&limit=12`;
             if (rawMin) url += `&minPrice=${rawMin}`;
             if (rawMax) url += `&maxPrice=${rawMax}`;
+            if (currentSort) url += `&sortBy=${currentSort}`;
+            if (currentOrder) url += `&order=${currentOrder}`;
 
             const prodRes = await api.get(url);
             setProducts(prodRes.data.data);
@@ -80,84 +84,111 @@ const Search = () => {
 
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= pagination.lastPage) {
-            fetchSearchResults(newPage, minPrice, maxPrice);
+            fetchSearchResults(newPage, minPrice, maxPrice, sortBy, order);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
     const applyPriceFilter = () => {
         if (error) return;
-        fetchSearchResults(1, minPrice, maxPrice);
+        fetchSearchResults(1, minPrice, maxPrice, sortBy, order);
     };
 
-    const clearFilters = () => {
+    const clearPriceFilters = () => {
         setMinPrice('');
         setMaxPrice('');
         setError('');
-        fetchSearchResults(1, '', '');
+        fetchSearchResults(1, '', '', sortBy, order);
+    };
+
+    const handleSortChange = (e) => {
+        const [newSort, newOrder] = e.target.value.split(':');
+        setSortBy(newSort);
+        setOrder(newOrder);
     };
 
     return (
         <div className="container section">
-            <div className="category-header">
-                <h1 className="category-title" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <SearchIcon size={32} color="var(--accent)" />
-                    Search Results: "{query}"
-                </h1>
-                <div className="category-divider"></div>
-
-                {/* Price Filter UI */}
-                <div className="filter-controls">
-                    <div className="price-inputs-container">
-                        <div className="price-inputs">
-                            <span className="filter-label">Filter Price:</span>
-                            <div className="input-with-prefix">
-                                <span className="prefix">Rp</span>
-                                <input
-                                    type="text"
-                                    placeholder="Min Price"
-                                    className={`filter-input ${error ? 'input-error' : ''}`}
-                                    value={minPrice}
-                                    onChange={(e) => handlePriceChange(e, setMinPrice)}
-                                />
-                            </div>
-                            <div className="input-with-prefix">
-                                <span className="prefix">Rp</span>
-                                <input
-                                    type="text"
-                                    placeholder="Max Price"
-                                    className={`filter-input ${error ? 'input-error' : ''}`}
-                                    value={maxPrice}
-                                    onChange={(e) => handlePriceChange(e, setMaxPrice)}
-                                />
-                            </div>
-                            <div className="filter-actions">
-                                {(minPrice || maxPrice) && (
-                                    <button className="btn-clear" onClick={clearFilters}>
-                                        Clear
-                                    </button>
-                                )}
-                                <button
-                                    className="btn-filter"
-                                    onClick={applyPriceFilter}
-                                    disabled={!!error}
-                                >
-                                    Apply Filter
-                                </button>
-                            </div>
-                        </div>
-                        {error && <div className="filter-error-msg">{error}</div>}
-                    </div>
+            {/* Search Header Group */}
+            <div className="search-header-group" style={{ marginBottom: '40px' }}>
+                <div className="search-info" style={{ textAlign: 'center' }}>
+                    <h1 className="category-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '10px' }}>
+                        <SearchIcon size={32} color="var(--accent)" />
+                        {loading ? 'Searching...' : `Results for "${query}"`}
+                    </h1>
+                    <p style={{ color: 'var(--text-light)', fontSize: '15px' }}>
+                        {products.length > 0 ? `Found ${products.length} exquisite drinks matching your search` : 'No exact matches found.'}
+                    </p>
                 </div>
             </div>
 
+            {/* Price Filter & Sort UI */}
+            <div className="filter-controls">
+                <div className="price-inputs-container">
+                    <div className="price-inputs">
+                        <span className="filter-label">Filter Price:</span>
+                        <div className="input-with-prefix">
+                            <span className="prefix">Rp</span>
+                            <input
+                                type="text"
+                                placeholder="Min Price"
+                                className={`filter-input ${error ? 'input-error' : ''}`}
+                                value={minPrice}
+                                onChange={(e) => handlePriceChange(e, setMinPrice)}
+                            />
+                        </div>
+                        <div className="input-with-prefix">
+                            <span className="prefix">Rp</span>
+                            <input
+                                type="text"
+                                placeholder="Max Price"
+                                className={`filter-input ${error ? 'input-error' : ''}`}
+                                value={maxPrice}
+                                onChange={(e) => handlePriceChange(e, setMaxPrice)}
+                            />
+                        </div>
+                        <div className="filter-actions">
+                            {(minPrice || maxPrice) && (
+                                <button className="btn-clear" onClick={clearPriceFilters}>
+                                    Clear
+                                </button>
+                            )}
+                            <button
+                                className="btn-filter"
+                                onClick={applyPriceFilter}
+                                disabled={!!error}
+                            >
+                                Apply Filter
+                            </button>
+                        </div>
+                    </div>
+                    {error && <div className="filter-error-msg">{error}</div>}
+                </div>
+
+                <div className="sort-container">
+                    <span className="filter-label">Sort By:</span>
+                    <select 
+                        className="filter-input sort-select" 
+                        value={`${sortBy}:${order}`} 
+                        onChange={handleSortChange}
+                    >
+                        <option value="createdAt:DESC">Newest Arrivals</option>
+                        <option value="productPrice:ASC">Price: Lowest to Highest</option>
+                        <option value="productPrice:DESC">Price: Highest to Lowest</option>
+                        <option value="view_count:DESC">Most Popular</option>
+                        <option value="productName:ASC">Name: A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            {/* Content Logic */}
             {loading ? (
                 <SkeletonList count={8} />
             ) : products.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '80px 40px', color: 'var(--text-light)' }}>
                     <div style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.3 }}>🍷</div>
-                    <h3>No wines matched your search.</h3>
-                    <p>Try different keywords or explore our categories.</p>
+                    <h3>No exact matches found.</h3>
+                    <p>Perhaps you'll find something you love in our categories.</p>
                     <Link to="/category" className="btn-primary" style={{ marginTop: '20px', display: 'inline-block' }}>
                         Browse Categories
                     </Link>
@@ -221,6 +252,13 @@ const Search = () => {
                             </button>
                         </div>
                     )}
+
+                    {/* Minimalist Bottom Suggestion */}
+                    <div style={{ textAlign: 'center', marginTop: '60px', opacity: 0.8 }}>
+                        <p style={{ color: 'var(--text-light)', fontSize: '14px' }}>
+                            Didn't find what you were looking for? <Link to="/category" style={{ color: 'var(--accent)', fontWeight: '600', textDecoration: 'underline' }}>Explore our full collection →</Link>
+                        </p>
+                    </div>
                 </>
             )}
         </div>

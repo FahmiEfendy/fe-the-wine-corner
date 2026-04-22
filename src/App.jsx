@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
@@ -12,6 +13,16 @@ import PageLayout from './components/PageLayout';
 import ProductDetail from './pages/ProductDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -38,6 +49,7 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <Router basename="/the-wine-corner">
+      <ScrollToTop />
       <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
         <main style={{ flex: 1 }}>

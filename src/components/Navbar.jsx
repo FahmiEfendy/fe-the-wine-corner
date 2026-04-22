@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Search, X, Menu } from 'lucide-react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 import '../styles/Navbar.css';
 import logo from '../assets/logo-wine-corner-min.jpg';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const isHomePage = location.pathname === '/';
 
     const [searchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
@@ -49,23 +52,34 @@ const Navbar = () => {
                         <img src={logo} alt="The Wine Corner" className="logo-img" />
                     </Link>
 
-                    {/* Desktop Search Bar */}
-                    <div className="navbar-search desktop-only">
-                        <Search className="search-icon" size={18} />
-                        <div className="search-input-wrapper">
-                            <input
-                                type="text"
-                                placeholder="Search wines..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            {searchTerm && (
-                                <button className="btn-clear-navbar" onClick={handleClear}>
-                                    <X size={14} />
-                                </button>
-                            )}
+                    {/* Desktop Search Bar - Hide on Homepage */}
+                    {!isHomePage ? (
+                        <div className="navbar-search desktop-only">
+                            <Search className="search-icon" size={18} />
+                            <div className="search-input-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Search drinks..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                {searchTerm && (
+                                    <button className="btn-clear-navbar" onClick={handleClear}>
+                                        <X size={14} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        /* Quick Links for Homepage */
+                        <div className="navbar-quick-links desktop-only">
+                            <Link to="/red-wine" className="quick-link">Red Wine</Link>
+                            <Link to="/white-wine" className="quick-link">White Wine</Link>
+                            <Link to="/gin" className="quick-link">Gin</Link>
+                            <Link to="/soju" className="quick-link">Soju</Link>
+                            <Link to="/whiskey" className="quick-link">Whiskey</Link>
+                        </div>
+                    )}
                 </div>
 
                 <div className="navbar-controls">
@@ -85,7 +99,7 @@ const Navbar = () => {
                             <div className="search-input-wrapper">
                                 <input
                                     type="text"
-                                    placeholder="Search wines..."
+                                    placeholder="Search drinks..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />

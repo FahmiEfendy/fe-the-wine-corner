@@ -77,7 +77,7 @@ const Navbar = () => {
                             <Link to="/white-wine" className="quick-link">White Wine</Link>
                             <Link to="/gin" className="quick-link">Gin</Link>
                             <Link to="/soju" className="quick-link">Soju</Link>
-                            <Link to="/whiskey" className="quick-link">Whiskey</Link>
+                            <Link to="/whisky" className="quick-link">Whisky</Link>
                         </div>
                     )}
                 </div>

@@ -17,7 +17,7 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await api.post('/api/auth/login', { username, password });
+            const response = await api.post('/auth/login', { username, password });
             localStorage.setItem('adminToken', response.data.token);
             navigate('/admin');
         } catch (err) {

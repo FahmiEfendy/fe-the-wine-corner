@@ -25,22 +25,22 @@ const ProductDetail = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const productRes = await api.get(`/api/products/${productId}`);
+                const productRes = await api.get(`/products/${productId}`);
                 setProduct(productRes.data);
 
                 // Fetch categories to get the type name
-                const categoryRes = await api.get('/api/categories');
+                const categoryRes = await api.get('/categories');
                 const matchedCat = categoryRes.data.find(c => c.productCategoryId === productRes.data.productCategoryId);
                 setCategory(matchedCat);
 
                 // Fetch related products in the same category (fetch 7 to account for current product)
-                const relatedRes = await api.get(`/api/products?categoryId=${productRes.data.productCategoryId}&limit=7`);
+                const relatedRes = await api.get(`/products?categoryId=${productRes.data.productCategoryId}&limit=7`);
                 // Filter out the current product and take top 6
                 setRelatedProducts(relatedRes.data.data.filter(p => p.productId !== productId).slice(0, 6));
 
                 // Increment view count (once per mount)
                 if (!hasTrackedView.current) {
-                    api.patch(`/api/products/${productId}/view`).catch(err => console.error('View tracking failed', err));
+                    api.patch(`/products/${productId}/view`).catch(err => console.error('View tracking failed', err));
                     hasTrackedView.current = true;
                 }
             } catch (err) {
@@ -68,7 +68,7 @@ const ProductDetail = () => {
     const content = CONTENT_MAP[category?.productType] || CONTENT_MAP['Default'];
 
     const trackClick = (type) => {
-        api.patch(`/api/products/${productId}/click/${type}`).catch(err => console.error(`Failed to track ${type} click`, err));
+        api.patch(`/products/${productId}/click/${type}`).catch(err => console.error(`Failed to track ${type} click`, err));
     };
 
     const whatsAppHandler = () => {

@@ -60,7 +60,7 @@ const Category = () => {
     const fetchCategoryData = async (page, min = '', max = '', currentSort = sortBy, currentOrder = order) => {
         setLoading(true);
         try {
-            const catRes = await api.get('/api/categories');
+            const catRes = await api.get('/categories');
             const currentCat = catRes.data.find(c => c.productPath === `/${categoryPath}`);
 
             if (currentCat) {
@@ -68,7 +68,7 @@ const Category = () => {
                 const rawMin = min.replace(/\D/g, '');
                 const rawMax = max.replace(/\D/g, '');
 
-                let url = `/api/products?categoryId=${currentCat.productCategoryId}&page=${page}&limit=9`;
+                let url = `/products?categoryId=${currentCat.productCategoryId}&page=${page}&limit=9`;
                 if (rawMin) url += `&minPrice=${rawMin}`;
                 if (rawMax) url += `&maxPrice=${rawMax}`;
                 if (currentSort) url += `&sortBy=${currentSort}`;

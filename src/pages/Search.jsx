@@ -66,7 +66,7 @@ const Search = () => {
             const rawMin = min.replace(/\D/g, '');
             const rawMax = max.replace(/\D/g, '');
 
-            let url = `/api/products?search=${encodeURIComponent(query)}&page=${page}&limit=12`;
+            let url = `/products?search=${encodeURIComponent(query)}&page=${page}&limit=12`;
             if (rawMin) url += `&minPrice=${rawMin}`;
             if (rawMax) url += `&maxPrice=${rawMax}`;
             if (currentSort) url += `&sortBy=${currentSort}`;

@@ -70,10 +70,10 @@ const AdminDashboard = () => {
                 order = 'DESC';
             }
 
-            const prodUrl = `/api/products?limit=10&page=${page}&sortBy=${sortBy}&order=${order}&search=${debouncedSearchTerm}${selectedCategoryId ? `&categoryId=${selectedCategoryId}` : ''}`;
+            const prodUrl = `/products?limit=10&page=${page}&sortBy=${sortBy}&order=${order}&search=${debouncedSearchTerm}${selectedCategoryId ? `&categoryId=${selectedCategoryId}` : ''}`;
             const [prodRes, catRes] = await Promise.all([
                 api.get(prodUrl),
-                api.get('/api/categories')
+                api.get('/categories')
             ]);
             setProducts(prodRes.data.data);
             setPagination(prodRes.data.pagination);
@@ -112,7 +112,7 @@ const AdminDashboard = () => {
         if (!productToDelete) return;
 
         try {
-            await api.delete(`/api/products/${productToDelete.productId}`);
+            await api.delete(`/products/${productToDelete.productId}`);
             setIsDeleteModalOpen(false);
             setProductToDelete(null);
             fetchData();
@@ -136,9 +136,9 @@ const AdminDashboard = () => {
             }
 
             if (editingProduct) {
-                await api.put(`/api/products/${editingProduct.productId}`, data);
+                await api.put(`/products/${editingProduct.productId}`, data);
             } else {
-                await api.post('/api/products', data);
+                await api.post('/products', data);
             }
             setIsModalOpen(false);
             fetchData();

@@ -30,7 +30,7 @@ const Home = () => {
         const date = new Date();
         const hourSeed = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
 
-        api.get(`/api/products?limit=6&sortBy=random&seed=${hourSeed}`)
+        api.get(`/products?limit=6&sortBy=random&seed=${hourSeed}`)
             .then(res => setProducts(res.data.data))
             .catch(err => console.error(err))
             .finally(() => setLoading(false));

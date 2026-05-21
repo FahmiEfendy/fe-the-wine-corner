@@ -48,7 +48,7 @@ const AnimatedRoutes = () => {
 
 function App() {
   return (
-    <Router basename="/the-wine-corner">
+    <Router basename="/">
       <ScrollToTop />
       <div className="app-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />

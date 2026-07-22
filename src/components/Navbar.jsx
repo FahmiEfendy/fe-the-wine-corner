@@ -3,7 +3,7 @@ import { Search, X, Menu } from 'lucide-react';
 import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 import '../styles/Navbar.css';
-import logo from '../assets/logo-wine-corner-min.jpg';
+import logo from '../assets/logo-wine-corner-min.webp';
 
 const Navbar = () => {
     const navigate = useNavigate();

@@ -68,7 +68,7 @@
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
-  background-size: 250%; /* 2.5x zoom */
+  background-size: 170%; /* 1.7x zoom (reduced to avoid too much zoom) */
   pointer-events: none;
   background-color: var(--white);
   z-index: 10;
@@ -99,12 +99,14 @@
 
 /* Gallery Thumbnails list */
 .gallery-thumbnails {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
   gap: 15px;
 }
 
 .thumbnail-btn {
+  flex: 1;
+  max-width: 140px;
   background: none;
   border: none;
   cursor: pointer;

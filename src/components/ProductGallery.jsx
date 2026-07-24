@@ -26,12 +26,6 @@ const ProductGallery = ({ productImage, productName }) => {
             label: 'Label Detail',
             type: 'zoom-crop',
             src: productImage
-        },
-        {
-            id: 'presentation',
-            label: 'Premium Display',
-            type: 'presentation',
-            src: productImage
         }
     ], [productImage]);
 
@@ -237,7 +231,7 @@ const ProductGallery = ({ productImage, productName }) => {
                                     animate={{ scale }}
                                     transition={{ type: 'spring', damping: 25, stiffness: 220 }}
                                     onDoubleClick={handleDoubleTap}
-                                    className={`lightbox-img-container view-${galleryItems[activeIndex].type}`}
+                                    className="lightbox-img-container"
                                 >
                                     <img
                                         src={

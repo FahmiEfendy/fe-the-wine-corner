@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+import Seo from '../components/Seo';
+import NotFound from './NotFound';
 import SkeletonList from '../components/SkeletonLoader';
 
 import '../styles/Category.css';
@@ -144,10 +146,14 @@ const Category = () => {
         return rangeWithDots;
     };
 
-    if (!loading && !category) return <div className="container" style={{ padding: '100px', textAlign: 'center' }}>Category not found.</div>;
+    if (!loading && !category) return <NotFound message="This category doesn't exist or may have been removed." />;
 
     return (
         <div className="container section">
+            <Seo
+                title={category ? category.productType : 'Category'}
+                description={category ? `Shop our curated selection of ${category.productType} at The Wine Corner.` : undefined}
+            />
             <div className="category-header">
                 <h1 className="category-title">{category ? category.productType : '...'}</h1>
                 <div className="category-divider"></div>

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import api from '../utils/api';
+import Seo from '../components/Seo';
+import NotFound from './NotFound';
 import { WhatsAppIcon } from '../components/Icons';
 import { CONTENT_MAP } from '../components/ProductContent';
 import { SkeletonCard } from '../components/SkeletonLoader';
@@ -63,7 +65,7 @@ const ProductDetail = () => {
             </div>
         );
     }
-    if (!product) return <div className="container" style={{ padding: '100px', textAlign: 'center' }}>Product not found.</div>;
+    if (!product) return <NotFound title="Product Not Found" message="This product doesn't exist or may have been removed." />;
 
     const content = CONTENT_MAP[category?.productType] || CONTENT_MAP['Default'];
 
@@ -80,8 +82,17 @@ const ProductDetail = () => {
         );
     };
 
+    const productImageUrl = product.productImage
+        ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
+        : undefined;
+
     return (
         <div className="container section">
+            <Seo
+                title={product.productName}
+                description={`${product.productName} — ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.productPrice)}. ${content.desc(product.productName)}`.slice(0, 200)}
+                image={productImageUrl}
+            />
             <button
                 onClick={() => navigate(-1)}
                 className="btn-back"

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search as SearchIcon } from 'lucide-react';
 
+import Seo from '../components/Seo';
 import SkeletonList from '../components/SkeletonLoader';
 
 import '../styles/Category.css'; // Reuse category styles for consistency
@@ -142,6 +143,7 @@ const Search = () => {
 
     return (
         <div className="container section">
+            <Seo title={query ? `Search: ${query}` : 'Search'} description={`Search results for "${query}" at The Wine Corner.`} />
             {/* Search Header Group */}
             <div className="search-header-group" style={{ marginBottom: '40px' }}>
                 <div className="search-info" style={{ textAlign: 'center' }}>

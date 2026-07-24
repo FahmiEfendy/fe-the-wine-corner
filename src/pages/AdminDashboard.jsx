@@ -1,10 +1,46 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X, Search, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 
 import api from '../utils/api';
+import Seo from '../components/Seo';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 import '../styles/AdminDashboard.css';
+
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // matches backend multer limit
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+const validateProductForm = ({ formData, selectedFile, editingProduct }) => {
+    const errors = {};
+
+    if (!formData.productName.trim()) {
+        errors.productName = 'Product name is required.';
+    }
+
+    const price = Number(formData.productPrice);
+    if (formData.productPrice === '' || Number.isNaN(price)) {
+        errors.productPrice = 'Price is required.';
+    } else if (price <= 0) {
+        errors.productPrice = 'Price must be greater than 0.';
+    }
+
+    if (!formData.productCategoryId) {
+        errors.productCategoryId = 'Please select a category.';
+    }
+
+    if (selectedFile) {
+        if (!ALLOWED_IMAGE_TYPES.includes(selectedFile.type)) {
+            errors.productImage = 'Only JPEG, PNG, GIF, or WebP images are allowed.';
+        } else if (selectedFile.size > MAX_IMAGE_SIZE_BYTES) {
+            errors.productImage = 'Image must be smaller than 5MB.';
+        }
+    } else if (!editingProduct && !formData.productImage.trim()) {
+        errors.productImage = 'Please upload an image or provide an image URL.';
+    }
+
+    return errors;
+};
 
 
 const AdminDashboard = () => {
@@ -23,6 +59,9 @@ const AdminDashboard = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
 
     // Form state
     const [formData, setFormData] = useState({
@@ -80,6 +119,7 @@ const AdminDashboard = () => {
             setCategories(catRes.data);
         } catch (err) {
             console.error('Error fetching data', err);
+            toast.error('Failed to load products. Please try again.');
         } finally {
             setLoading(false);
             setIsRefreshing(false);
@@ -88,6 +128,7 @@ const AdminDashboard = () => {
 
     const handleOpenModal = (product = null) => {
         setSelectedFile(null);
+        setFormErrors({});
         if (product) {
             setEditingProduct(product);
             setFormData({
@@ -111,18 +152,28 @@ const AdminDashboard = () => {
     const confirmDelete = async () => {
         if (!productToDelete) return;
 
+        setIsDeleting(true);
         try {
             await api.delete(`/products/${productToDelete.productId}`);
             setIsDeleteModalOpen(false);
             setProductToDelete(null);
+            toast.success('Product deleted successfully.');
             fetchData();
         } catch (err) {
-            alert('Delete failed: ' + err.message);
+            toast.error('Delete failed: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setIsDeleting(false);
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const errors = validateProductForm({ formData, selectedFile, editingProduct });
+        setFormErrors(errors);
+        if (Object.keys(errors).length > 0) return;
+
+        setIsSubmitting(true);
         try {
             const data = new FormData();
             data.append('productName', formData.productName);
@@ -137,13 +188,17 @@ const AdminDashboard = () => {
 
             if (editingProduct) {
                 await api.put(`/products/${editingProduct.productId}`, data);
+                toast.success('Product updated successfully.');
             } else {
                 await api.post('/products', data);
+                toast.success('Product created successfully.');
             }
             setIsModalOpen(false);
             fetchData();
         } catch (err) {
-            alert('Operation failed: ' + err.message);
+            toast.error('Operation failed: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -151,6 +206,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="container section">
+            <Seo title="Admin Dashboard" noIndex />
             <div className="admin-header">
                 <h1 className="admin-title">Product Management</h1>
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -236,7 +292,15 @@ const AdminDashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.length > 0 ? (
+                        {isRefreshing ? (
+                            [...Array(5)].map((_, i) => (
+                                <tr key={`skeleton-${i}`}>
+                                    <td colSpan="6">
+                                        <div className="admin-row-skeleton" />
+                                    </td>
+                                </tr>
+                            ))
+                        ) : products.length > 0 ? (
                             products.map(product => (
                                 <tr key={product.productId}>
                                     <td>
@@ -324,23 +388,25 @@ const AdminDashboard = () => {
                             <div className="form-group">
                                 <label className="form-label">Product Name</label>
                                 <input
-                                    type="text" required className="form-input"
+                                    type="text" className={`form-input ${formErrors.productName ? 'input-error' : ''}`}
                                     value={formData.productName}
                                     onChange={e => setFormData({ ...formData, productName: e.target.value })}
                                 />
+                                {formErrors.productName && <div className="field-error">{formErrors.productName}</div>}
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Price (IDR)</label>
                                 <input
-                                    type="number" required className="form-input"
+                                    type="number" className={`form-input ${formErrors.productPrice ? 'input-error' : ''}`}
                                     value={formData.productPrice}
                                     onChange={e => setFormData({ ...formData, productPrice: e.target.value })}
                                 />
+                                {formErrors.productPrice && <div className="field-error">{formErrors.productPrice}</div>}
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Category</label>
                                 <select
-                                    required className="form-input"
+                                    className={`form-input ${formErrors.productCategoryId ? 'input-error' : ''}`}
                                     value={formData.productCategoryId}
                                     onChange={e => setFormData({ ...formData, productCategoryId: e.target.value })}
                                 >
@@ -351,28 +417,30 @@ const AdminDashboard = () => {
                                         </option>
                                     ))}
                                 </select>
+                                {formErrors.productCategoryId && <div className="field-error">{formErrors.productCategoryId}</div>}
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Product Image</label>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <input
                                         type="file"
-                                        className="form-input"
+                                        className={`form-input ${formErrors.productImage ? 'input-error' : ''}`}
                                         accept="image/*"
-                                        onChange={e => setSelectedFile(e.target.files[0])}
+                                        onChange={e => setSelectedFile(e.target.files[0] || null)}
                                     />
                                     <div style={{ textAlign: 'center', fontSize: '12px', color: '#999' }}>— OR —</div>
                                     <input
                                         type="text"
-                                        className="form-input"
+                                        className={`form-input ${formErrors.productImage ? 'input-error' : ''}`}
                                         placeholder="Image URL (e.g. uploads/... or http://...)"
                                         value={formData.productImage}
                                         onChange={e => setFormData({ ...formData, productImage: e.target.value })}
                                     />
                                 </div>
+                                {formErrors.productImage && <div className="field-error">{formErrors.productImage}</div>}
                             </div>
-                            <button type="submit" className="btn-admin" style={{ width: '100%', marginTop: '10px', justifyContent: 'center' }}>
-                                {editingProduct ? 'Save Changes' : 'Create Product'}
+                            <button type="submit" className="btn-admin" disabled={isSubmitting} style={{ width: '100%', marginTop: '10px', justifyContent: 'center' }}>
+                                {isSubmitting ? 'Saving...' : (editingProduct ? 'Save Changes' : 'Create Product')}
                             </button>
                         </form>
                     </div>
@@ -411,6 +479,7 @@ const AdminDashboard = () => {
                         <div className="delete-actions">
                             <button
                                 className="btn-cancel"
+                                disabled={isDeleting}
                                 onClick={() => {
                                     setIsDeleteModalOpen(false);
                                     setProductToDelete(null);
@@ -420,9 +489,10 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 className="btn-delete-confirm"
+                                disabled={isDeleting}
                                 onClick={confirmDelete}
                             >
-                                Delete Product
+                                {isDeleting ? 'Deleting...' : 'Delete Product'}
                             </button>
                         </div>
                     </div>

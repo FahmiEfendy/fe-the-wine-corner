@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '../utils/api';
+import Seo from '../components/Seo';
 
 import '../styles/AdminLogin.css';
 
@@ -29,6 +30,7 @@ const AdminLogin = () => {
 
     return (
         <div className="login-container">
+            <Seo title="Admin Login" noIndex />
             <div className="login-card fade-in">
                 <h1 className="login-title">Admin Login</h1>
 

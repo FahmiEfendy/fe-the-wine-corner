@@ -249,6 +249,29 @@
   border: 1px solid #ddd;
 }
 
+.form-input.input-error {
+  border-color: #ff4d4f;
+}
+
+.field-error {
+  color: #d63031;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.admin-row-skeleton {
+  height: 56px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: admin-row-skeleton-shine 1.4s ease infinite;
+}
+
+@keyframes admin-row-skeleton-shine {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
 @media (max-width: 768px) {
   .admin-header {
     flex-direction: column;

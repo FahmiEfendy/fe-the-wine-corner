@@ -2,6 +2,7 @@ import api from '../utils/api';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import Seo from '../components/Seo';
 import SkeletonList from '../components/SkeletonLoader';
 
 import '../styles/Explore.css';
@@ -20,6 +21,7 @@ const Explore = () => {
     if (loading) {
         return (
             <div className="container section">
+                <Seo title="Explore Our Collections" description="Browse The Wine Corner's curated wine categories, from reds and whites to sparkling and spirits." />
                 <div className="category-header">
                     <h1 className="category-title">Explore Our Collections</h1>
                     <p className="footer-text">Select a category to view our curated selection</p>
@@ -32,6 +34,7 @@ const Explore = () => {
 
     return (
         <div className="container section">
+            <Seo title="Explore Our Collections" description="Browse The Wine Corner's curated wine categories, from reds and whites to sparkling and spirits." />
             <div className="category-header">
                 <h1 className="category-title">Explore Our Collections</h1>
                 <p className="footer-text">Select a category to view our curated selection</p>

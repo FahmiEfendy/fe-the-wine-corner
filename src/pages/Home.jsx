@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import Seo from '../components/Seo';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 import '../styles/Home.css';
@@ -47,6 +48,10 @@ const Home = () => {
 
     return (
         <div>
+            <Seo
+                description="Discover our curated collection of premium wines from the world's most renowned vineyards. Shop exquisite wines for every moment."
+                url={typeof window !== 'undefined' ? window.location.origin + '/' : undefined}
+            />
             {/* Hero Section */}
             <div className="wine-gradient hero">
                 <div className="container fade-in">

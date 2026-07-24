@@ -2,7 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 const SITE_NAME = 'The Wine Corner';
 const DEFAULT_DESCRIPTION = "Discover The Wine Corner's curated collection of premium wines from the world's most renowned vineyards.";
-const DEFAULT_IMAGE = 'https://wine.fahmiefendy.dev/src/assets/logo-wine-corner-min.webp';
+// NOTE: This must be an absolute URL pointing to a publicly reachable image.
+// The logo WebP is served by Nginx under /assets/ after the Vite build.
+// Update this to the actual production CDN URL once the build hash is known,
+// or set VITE_OG_IMAGE env var to override per environment.
+const DEFAULT_IMAGE = import.meta.env.VITE_OG_IMAGE || 'https://wine.fahmiefendy.dev/og-image.png';
 
 const Seo = ({ title, description = DEFAULT_DESCRIPTION, image = DEFAULT_IMAGE, url, noIndex = false }) => {
     const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Exquisite Wines for Every Moment`;

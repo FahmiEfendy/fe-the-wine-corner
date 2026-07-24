@@ -5,14 +5,11 @@
 
 ## 🟡 Medium
 
-- [ ] **Image lazy loading** — Defer off-screen product images with `loading="lazy"` or Intersection Observer
-- [ ] **Image optimization** — Serve WebP format and multiple sizes for product images
+- [ ] **OG image for OpenGraph** — Place a static `og-image.png` in `public/` and set `VITE_OG_IMAGE` in GitHub Actions build args. The current `DEFAULT_IMAGE` in `Seo.jsx` points to a placeholder URL that needs this file at build time
+- [ ] **Canonical URL query strings** — `Seo.jsx` uses `window.location.href` as the canonical, which includes query strings on Search and filtered Category pages. Use `window.location.origin + window.location.pathname` to emit clean canonical URLs
+- [ ] **Bundle size** — Main JS chunk is 504 kB (gzipped 164 kB). Use dynamic `import()` to code-split `AdminDashboard`, `ProductGallery`, and `framer-motion` to reduce initial load
 - [ ] **Accessibility audit** — Run axe/Lighthouse audit, fix ARIA labels, keyboard navigation, and color contrast issues
 - [ ] **PWA support** — Add `manifest.json` and service worker for offline access and "Add to Home Screen"
-- [ ] **Responsive image gallery** — Zoomable product images with touch gestures on mobile
-- [ ] **Search functionality** — Add product search bar with debounced API queries
-- [ ] **Price formatting** — Format prices with locale-aware currency (e.g., Rp 250.000)
-- [ ] **Pagination / infinite scroll** — Handle large product catalogs without loading everything at once
 
 ## 🟢 Nice to Have
 
@@ -25,3 +22,4 @@
 - [ ] **Performance monitoring** — Add Web Vitals tracking (LCP, FID, CLS)
 - [ ] **Storybook** — Component library documentation for development
 - [ ] **Sitemap generation** — Auto-generate `sitemap.xml` for search engine crawlers
+- [ ] **`getImageUrl()` utility** — Extract shared image URL construction logic from `ProductDetail.jsx` and `ProductGallery.jsx` into a reusable `utils/image.js` helper

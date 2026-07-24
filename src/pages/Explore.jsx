@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import Seo from '../components/Seo';
 import SkeletonList from '../components/SkeletonLoader';
+import LazyImage from '../components/LazyImage';
 
 import '../styles/Explore.css';
 
@@ -49,11 +50,8 @@ const Explore = () => {
                         className="category-card"
                     >
                         <div className="category-image-container">
-                            <img
-                                src={cat.image_path
-                                    ? (cat.image_path.startsWith('http') ? cat.image_path : `${import.meta.env.VITE_API_BASE_URL}/${cat.image_path}`)
-                                    : "https://upload.wikimedia.org/wikipedia/commons/a/a8/Common_alcoholic_beverages.jpg"
-                                }
+                            <LazyImage
+                                src={cat.image_path || "https://upload.wikimedia.org/wikipedia/commons/a/a8/Common_alcoholic_beverages.jpg"}
                                 alt={cat.productType}
                                 className="category-image"
                             />

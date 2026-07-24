@@ -11,6 +11,8 @@ import { SkeletonCard } from '../components/SkeletonLoader';
 
 import topedIcon from '../assets/toped-icons.png';
 import blibliIcon from '../assets/blibli-icons.png';
+import LazyImage from '../components/LazyImage';
+import ProductGallery from '../components/ProductGallery';
 
 import '../styles/ProductDetail.css';
 
@@ -102,14 +104,10 @@ const ProductDetail = () => {
 
             <div className="detail-grid">
                 {/* Image Section */}
-                <div className="detail-image-box fade-in">
-                    <img
-                        src={product.productImage
-                            ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
-                            : 'https://static.thenounproject.com/png/26593-200.png'}
-                        alt={product.productName}
-                        className="detail-image"
-                        onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
+                <div className="fade-in">
+                    <ProductGallery
+                        productImage={product.productImage}
+                        productName={product.productName}
                     />
                 </div>
 
@@ -200,13 +198,10 @@ const ProductDetail = () => {
                                 style={{ cursor: 'pointer' }}
                             >
                                 <div className="product-image-container" style={{ height: '250px' }}>
-                                    <img
-                                        src={rp.productImage
-                                            ? (rp.productImage.startsWith('http') ? rp.productImage : `${import.meta.env.VITE_API_BASE_URL}/${rp.productImage}`)
-                                            : 'https://static.thenounproject.com/png/26593-200.png'}
+                                    <LazyImage
+                                        src={rp.productImage}
                                         alt={rp.productName}
                                         className="product-image"
-                                        onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                                     />
                                 </div>
                                 <div className="product-info">

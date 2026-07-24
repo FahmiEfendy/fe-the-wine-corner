@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import Seo from '../components/Seo';
 import LoadingSpinner from '../components/LoadingSpinner';
+import LazyImage from '../components/LazyImage';
 
 import '../styles/Home.css';
 
@@ -95,13 +96,10 @@ const Home = () => {
                             <Link key={product.productId} to={`/product/${product.productId}`}>
                                 <div className="product-card">
                                     <div className="product-image-container">
-                                        <img
-                                            src={product.productImage
-                                                ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
-                                                : 'https://static.thenounproject.com/png/26593-200.png'}
+                                        <LazyImage
+                                            src={product.productImage}
                                             alt={product.productName}
                                             className="product-image"
-                                            onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                                         />
                                     </div>
                                     <div className="product-info">

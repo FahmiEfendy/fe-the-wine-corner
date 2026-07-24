@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Seo from '../components/Seo';
 import NotFound from './NotFound';
 import SkeletonList from '../components/SkeletonLoader';
+import LazyImage from '../components/LazyImage';
 
 import '../styles/Category.css';
 
@@ -231,13 +232,10 @@ const Category = () => {
                             <Link key={product.productId} to={`/product/${product.productId}`}>
                                 <div className="product-card">
                                     <div className="product-image-container">
-                                        <img
-                                            src={product.productImage
-                                                ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
-                                                : 'https://static.thenounproject.com/png/26593-200.png'}
+                                        <LazyImage
+                                            src={product.productImage}
                                             alt={product.productName}
                                             className="product-image"
-                                            onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                                         />
                                     </div>
                                     <div className="product-info">

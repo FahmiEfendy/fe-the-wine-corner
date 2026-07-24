@@ -5,6 +5,7 @@ import { Plus, Edit2, Trash2, X, Search, ChevronLeft, ChevronRight, RefreshCw } 
 import api from '../utils/api';
 import Seo from '../components/Seo';
 import LoadingSpinner from '../components/LoadingSpinner';
+import LazyImage from '../components/LazyImage';
 
 import '../styles/AdminDashboard.css';
 
@@ -306,13 +307,10 @@ const AdminDashboard = () => {
                                     <td>
                                         <div className="admin-product-item">
                                             <div className="admin-product-thumb">
-                                                <img
-                                                    src={product.productImage
-                                                        ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
-                                                        : 'https://static.thenounproject.com/png/26593-200.png'}
+                                                <LazyImage
+                                                    src={product.productImage}
                                                     alt=""
                                                     style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                                    onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                                                 />
                                             </div>
                                             <span className="admin-product-name">{product.productName}</span>
@@ -467,12 +465,9 @@ const AdminDashboard = () => {
                         </p>
 
                         <div className="delete-preview">
-                            <img
-                                src={productToDelete.productImage
-                                    ? (productToDelete.productImage.startsWith('http') ? productToDelete.productImage : `${import.meta.env.VITE_API_BASE_URL}/${productToDelete.productImage}`)
-                                    : 'https://static.thenounproject.com/png/26593-200.png'}
+                            <LazyImage
+                                src={productToDelete.productImage}
                                 alt={productToDelete.productName}
-                                onError={(e) => { e.target.src = 'https://static.thenounproject.com/png/26593-200.png'; }}
                             />
                         </div>
 

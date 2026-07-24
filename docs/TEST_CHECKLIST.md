@@ -53,11 +53,34 @@ Run through this checklist after every deployment or significant code change.
   ```
   **Expected:** `200` (returns index.html for client-side routing)
 
-- [ ] **Unknown route falls back to SPA**
+- [ ] **Unknown route falls back to 404 page** *(not a blank page or SPA error)*
   ```bash
   curl -s -o /dev/null -w "%{http_code}" http://wine.fahmiefendy.dev/some/random/path
   ```
-  **Expected:** `200` (SPA handles 404 display client-side)
+  **Expected:** `200` (SPA handles routing, `NotFound` component renders)
+
+- [ ] **NotFound page renders correctly** — Navigate to `wine.fahmiefendy.dev/this-does-not-exist` in a browser
+  **Expected:** Branded 404 page with Wine icon and "Back to Home" button
+
+---
+
+## 4. SEO & Meta Tags
+
+> Use a browser and inspect page source, or use `curl -s http://wine.fahmiefendy.dev/ | grep -i og:title`.
+
+- [ ] **Homepage has correct `<title>`** — Should be `The Wine Corner — Exquisite Wines for Every Moment`
+- [ ] **Product detail page has product-specific `<title>`** — Should be `<Product Name> | The Wine Corner`
+- [ ] **Open Graph tags present on homepage**
+  ```bash
+  curl -s http://wine.fahmiefendy.dev/ | grep -E 'og:title|og:description|og:image'
+  ```
+  **Expected:** Three `<meta property="og:…">` tags
+- [ ] **Admin pages have `noindex` meta tag**
+  ```bash
+  # In browser, navigate to /admin/login and check page source for:
+  # <meta name="robots" content="noindex, nofollow" />
+  ```
+  **Expected:** Present on `/admin/login` and `/admin`
 
 ---
 
@@ -114,17 +137,39 @@ Run through this checklist after every deployment or significant code change.
 - [ ] **Admin login page loads** — Login form renders correctly
 - [ ] **Login with valid credentials** — Successfully authenticates and redirects to admin dashboard
 - [ ] **Login with invalid credentials** — Shows error message, stays on login page
-- [ ] **Create product** — Form with image upload works, product appears in catalog
-- [ ] **Edit product** — Existing product data loads in form, saves changes
-- [ ] **Delete product** — Product is removed from catalog after confirmation
+- [ ] **Create product** — Form with image upload works, product appears in catalog; success toast shown
+- [ ] **Edit product** — Existing product data loads in form, saves changes; success toast shown
+- [ ] **Delete product** — Product is removed from catalog after confirmation; success toast shown
 - [ ] **Create category** — New category appears in category list
 - [ ] **Edit category** — Category updates are reflected
 - [ ] **Delete category** — Category is removed (products with this category handle gracefully)
 - [ ] **Logout** — Session is cleared, redirects to login page
+- [ ] **Session expiry** — Expire the JWT token manually; next API call shows a "session expired" toast and redirects to login
+- [ ] **Form validation** — Submit the product form with empty fields; expect field-level error messages (no alert dialog)
+- [ ] **Refresh skeletons** — Click the refresh button; expect skeleton rows in the product table before data loads
 
 ---
 
-## 7. Rollback
+## 7. Image Optimization
+
+> Open any product page and inspect network requests in browser DevTools.
+
+- [ ] **LazyImage blur-up animation** — Product images initially render blurred and sharpen once the hi-res version loads
+- [ ] **Images lazy-load on scroll** — Network tab shows images for off-screen products not fetched until scrolled into view
+- [ ] **ProductGallery desktop hover zoom** — On a product detail page, hover over the main image; a magnified overlay should appear
+- [ ] **ProductGallery lightbox** — Click the main image; a full-screen lightbox opens with zoom in/out and close controls
+- [ ] **ProductGallery keyboard navigation** — With lightbox open, press `ArrowLeft`, `ArrowRight`, `Escape` keys
+  **Expected:** Navigate between views; `Escape` closes the lightbox
+- [ ] **ProductGallery mobile swipe** — On a mobile device, swipe left/right in the lightbox to navigate; swipe down to close
+- [ ] **Optimized image served with `?w=` param**
+  ```bash
+  curl -s -I "http://wine.fahmiefendy.dev/uploads/<image-filename>?w=400" | grep -i content-type
+  ```
+  **Expected:** `image/webp` or correct image content type
+
+---
+
+## 8. Rollback
 
 - [ ] **Previous image can be restored**
   ```bash

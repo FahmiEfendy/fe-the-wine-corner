@@ -2,7 +2,7 @@ import { Check, Info, Wine } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import api from '../utils/api';
+import api, { getApiBaseUrl } from '../utils/api';
 import Seo from '../components/Seo';
 import NotFound from './NotFound';
 import { WhatsAppIcon } from '../components/Icons';
@@ -85,7 +85,7 @@ const ProductDetail = () => {
     };
 
     const productImageUrl = product.productImage
-        ? (product.productImage.startsWith('http') ? product.productImage : `${import.meta.env.VITE_API_BASE_URL}/${product.productImage}`)
+        ? (product.productImage.startsWith('http') ? product.productImage : `${getApiBaseUrl()}/${product.productImage}`)
         : undefined;
 
     return (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/LazyImage.css';
 
 const LazyImage = ({ src, alt, className, containerStyle, ...props }) => {
@@ -43,7 +44,7 @@ const LazyImage = ({ src, alt, className, containerStyle, ...props }) => {
         if (isExternal) {
             imageUrls = { src };
         } else {
-            const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+            const baseUrl = getApiBaseUrl();
             const fullUrl = src.startsWith('/') ? `${baseUrl}${src}` : `${baseUrl}/${src}`;
             imageUrls = {
                 src: `${fullUrl}?w=600`,

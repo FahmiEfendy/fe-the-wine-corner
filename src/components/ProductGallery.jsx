@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import LazyImage from './LazyImage';
+import { getApiBaseUrl } from '../utils/api';
 import '../styles/ProductGallery.css';
 
 const ProductGallery = ({ productImage, productName }) => {
@@ -64,7 +65,7 @@ const ProductGallery = ({ productImage, productName }) => {
                                 backgroundImage: `url(${
                                     productImage.startsWith('http') 
                                         ? productImage 
-                                        : `${import.meta.env.VITE_API_BASE_URL}/${productImage}`
+                                        : `${getApiBaseUrl()}/${productImage}`
                                 })`,
                                 backgroundPosition: `${mousePos.x}% ${mousePos.y}%`
                             }}

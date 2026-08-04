@@ -1,8 +1,21 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// Domain-to-API mapping so one build serves the correct API host for
+// whichever domain it's accessed from (wine.fahmiefendy.dev vs thewinecorner.id).
+const API_HOST_BY_HOSTNAME = {
+    'wine.fahmiefendy.dev': 'https://api-wine.fahmiefendy.dev',
+    'thewinecorner.id': 'https://api.thewinecorner.id',
+    'www.thewinecorner.id': 'https://api.thewinecorner.id',
+};
+
+export const getApiBaseUrl = () => {
+    const mapped = API_HOST_BY_HOSTNAME[window.location.hostname];
+    return mapped || import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+};
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
+    baseURL: getApiBaseUrl(),
 });
 
 // Request interceptor to add the token

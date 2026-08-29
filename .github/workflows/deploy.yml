@@ -51,7 +51,7 @@ jobs:
         run: |
           {
             echo "### Deploying \`twc-fe\`"
-            echo "- **Ref input:** \`${{ inputs.ref != '' && inputs.ref || '(none — used triggering branch)' }}\`"
+            echo "- **Ref input:** \`${{ inputs.ref != '' && inputs.ref || '(none — deployed latest commit on selected branch)' }}\`"
             echo "- **Deploying:** \`${{ steps.resolve.outputs.ref }}\`"
             echo "- **Commit:** \`$(git rev-parse HEAD)\` ($(git log -1 --pretty=%s))"
             echo "- **Author:** $(git log -1 --pretty='%an')"
@@ -68,7 +68,7 @@ jobs:
               || echo "(no previous commit found in history — can't compute diff)" >> "$GITHUB_STEP_SUMMARY"
             echo '```' >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- No previous successful deployment found (first run?)" >> "$GITHUB_STEP_SUMMARY"
+            echo "- No prior successful deployment on record (first success, or earlier runs failed)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Log in to GHCR

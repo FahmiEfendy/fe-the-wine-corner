@@ -206,23 +206,10 @@ const AdminDashboard = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="container section">
+        <div className="container section admin-page-section">
             <Seo title="Admin Dashboard" noIndex />
             <div className="admin-header">
                 <h1 className="admin-title">Product Management</h1>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <button
-                        onClick={() => fetchData()}
-                        className={`btn-admin btn-refresh-full ${isRefreshing ? 'fetching-pulse' : ''}`}
-                        disabled={isRefreshing}
-                    >
-                        <RefreshCw size={18} className={isRefreshing ? 'spinning' : ''} />
-                        <span>{isRefreshing ? 'Fetching...' : 'Refresh Product'}</span>
-                    </button>
-                    <button onClick={() => handleOpenModal()} className="btn-admin">
-                        <Plus size={20} /> Add Product
-                    </button>
-                </div>
             </div>
 
             <div className="admin-filters">
@@ -243,7 +230,37 @@ const AdminDashboard = () => {
                         )}
                     </div>
 
-                    <div className="sort-wrapper">
+                    <div className="admin-header-actions">
+                        <button
+                            onClick={() => fetchData()}
+                            className={`btn-admin btn-refresh-full ${isRefreshing ? 'fetching-pulse' : ''}`}
+                            disabled={isRefreshing}
+                        >
+                            <RefreshCw size={18} className={isRefreshing ? 'spinning' : ''} />
+                            <span>{isRefreshing ? 'Fetching...' : 'Refresh Product'}</span>
+                        </button>
+                        <button onClick={() => handleOpenModal()} className="btn-admin">
+                            <Plus size={20} /> Add Product
+                        </button>
+                    </div>
+
+                    <div className="category-sort-row">
+                        <div className="category-select-wrapper">
+                            <select
+                                className="sort-select"
+                                value={selectedCategoryId || ''}
+                                onChange={(e) => setSelectedCategoryId(e.target.value || null)}
+                            >
+                                <option value="">All Categories</option>
+                                {categories.map(cat => (
+                                    <option key={cat.productCategoryId} value={cat.productCategoryId}>
+                                        {cat.productType}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="sort-wrapper">
                         <select
                             className="sort-select"
                             value={sortOption}
@@ -258,25 +275,8 @@ const AdminDashboard = () => {
                             <option value="price-asc">Price (Low to High)</option>
                             <option value="price-desc">Price (High to Low)</option>
                         </select>
+                        </div>
                     </div>
-                </div>
-
-                <div className="category-chips">
-                    <button
-                        className={`chip ${selectedCategoryId === null ? 'active' : ''}`}
-                        onClick={() => setSelectedCategoryId(null)}
-                    >
-                        All Categories
-                    </button>
-                    {categories.map(cat => (
-                        <button
-                            key={cat.productCategoryId}
-                            className={`chip ${selectedCategoryId === cat.productCategoryId ? 'active' : ''}`}
-                            onClick={() => setSelectedCategoryId(cat.productCategoryId)}
-                        >
-                            {cat.productType}
-                        </button>
-                    ))}
                 </div>
             </div>
 
@@ -287,8 +287,8 @@ const AdminDashboard = () => {
                             <th style={{ width: '40%' }}>Product</th>
                             <th style={{ width: '15%' }}>Category</th>
                             <th style={{ width: '10%' }}>Price</th>
-                            <th style={{ width: '5%' }}>Views</th>
-                            <th style={{ width: '15%' }}>Clicks</th>
+                            <th className="col-hide-mobile" style={{ width: '5%' }}>Views</th>
+                            <th className="col-hide-mobile" style={{ width: '15%' }}>Clicks</th>
                             <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
                         </tr>
                     </thead>
@@ -318,12 +318,12 @@ const AdminDashboard = () => {
                                     </td>
                                     <td>{categories.find(c => c.productCategoryId === product.productCategoryId)?.productType || 'N/A'}</td>
                                     <td>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.productPrice)}</td>
-                                    <td>
+                                    <td className="col-hide-mobile">
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--text-light)', fontSize: '13px' }}>
                                             <span>{product.view_count || 0}</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className="col-hide-mobile">
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '11px', color: 'var(--text-light)' }}>
                                             <span>WA: {product.whatsapp_clicks || 0}</span>
                                             <span>BB: {product.blibli_clicks || 0}</span>

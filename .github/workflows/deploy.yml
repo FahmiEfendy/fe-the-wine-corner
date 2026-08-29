@@ -1,10 +1,11 @@
 name: Deploy Production
+run-name: "Deploy Production (twc-fe) — ${{ inputs.ref != '' && inputs.ref || github.ref_name }}"
 
 on:
   workflow_dispatch:
     inputs:
       ref:
-        description: 'Branch, tag, or commit SHA to deploy (leave empty to deploy the branch you run this from)'
+        description: 'Override: commit SHA (or branch/tag) to deploy instead of the branch selected above — leave empty to just deploy that branch'
         required: false
         default: ''
 
@@ -14,9 +15,10 @@ permissions:
   actions: read
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment: production
+    outputs:
+      ref: ${{ steps.resolve.outputs.ref }}
     steps:
       - name: Resolve ref
         id: resolve
@@ -87,6 +89,11 @@ jobs:
             ghcr.io/fahmiefendy/fe-the-wine-corner:latest
             ghcr.io/fahmiefendy/fe-the-wine-corner:${{ steps.vars.outputs.sha_short }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
       - name: Install cloudflared
         run: |
           curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
@@ -104,7 +111,7 @@ jobs:
       - name: Deploy on VPS
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.VPS_SSH_KEY }}" | base64 -d > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2222 gh-deploy@localhost \
             "/home/fahmi/homeserver/apps/the-wine-corner/deploy.sh twc-fe"

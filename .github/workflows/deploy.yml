@@ -1,5 +1,5 @@
 name: Deploy Production
-run-name: "Deploy Production (twc-fe) — ${{ inputs.ref != '' && inputs.ref || github.ref_name }}"
+run-name: "Deploy Production — branch ${{ inputs.ref != '' && inputs.ref || github.ref_name }}"
 
 on:
   workflow_dispatch:

@@ -223,7 +223,7 @@ const Category = () => {
                 <SkeletonList count={6} />
             ) : products.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-light)' }}>
-                    No wines available in this category yet.
+                    No products available in this category yet.
                 </div>
             ) : (
                 <>
